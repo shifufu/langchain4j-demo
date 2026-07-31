@@ -246,3 +246,10 @@ A: 可以，通过修改配置文件中的 `use-custom-volcengine`、`base-url` 
 ## 许可证
 
 MIT License
+
+
+运行界面
+![img.png](img.png)
+
+![img_1.png](img_1.png)
+
