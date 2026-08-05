@@ -94,4 +94,22 @@ public class ChatService {
     public String recommendMusicByBook(String bookName) {
         return assistant.recommendMusicByBook("推荐音乐", bookName);
     }
+
+    // ==================== 新增有趣互动功能 ====================
+
+    public String roleplay(String character, String message) {
+        return assistant.roleplay(message, character);
+    }
+
+    public String generateStory(String theme, String style, String elements) {
+        return assistant.generateStory("开始创作", theme, style, elements);
+    }
+
+    public String analyzeEmotion(String text) {
+        return assistant.analyzeEmotion(text);
+    }
+
+    public String brainstorm(String topic) {
+        return assistant.brainstorm("开始脑洞", topic);
+    }
 }

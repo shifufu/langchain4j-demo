@@ -58,6 +58,22 @@
             <el-icon class="menu-icon"><Headset /></el-icon>
             <span>🎵 时空音律</span>
           </el-menu-item>
+          <el-menu-item index="roleplay" class="menu-item">
+            <el-icon class="menu-icon"><UserFilled /></el-icon>
+            <span>🎭 角色扮演</span>
+          </el-menu-item>
+          <el-menu-item index="story" class="menu-item">
+            <el-icon class="menu-icon"><Reading /></el-icon>
+            <span>📖 故事生成器</span>
+          </el-menu-item>
+          <el-menu-item index="emotion" class="menu-item">
+            <el-icon class="menu-icon"><DataAnalysis /></el-icon>
+            <span>💖 情绪分析</span>
+          </el-menu-item>
+          <el-menu-item index="brainstorm" class="menu-item">
+            <el-icon class="menu-icon"><Lightning /></el-icon>
+            <span>💡 脑洞生成器</span>
+          </el-menu-item>
         </el-menu>
       </el-aside>
 
@@ -485,6 +501,237 @@
             </div>
           </el-card>
         </div>
+
+        <!-- 角色扮演 -->
+        <div v-if="activeTab === 'roleplay'" class="tab-content">
+          <el-card shadow="hover">
+            <template #header>
+              <div class="card-header">
+                <span>🎭 角色扮演</span>
+              </div>
+            </template>
+            <el-select
+              v-model="roleplayCharacter"
+              placeholder="选择角色"
+              class="input-area"
+              style="width: 100%"
+            >
+              <el-option label="🧙 李白 - 诗仙" value="李白" />
+              <el-option label="🧠 爱因斯坦 - 物理学家" value="爱因斯坦" />
+              <el-option label="🏯 诸葛亮 - 三国军师" value="诸葛亮" />
+              <el-option label="🌊 海明威 - 硬汉作家" value="海明威" />
+              <el-option label="🎭 莎士比亚 - 戏剧大师" value="莎士比亚" />
+              <el-option label="⚔ 曹操 - 一代枭雄" value="曹操" />
+              <el-option label="🐉 孙悟空 - 齐天大圣" value="孙悟空" />
+              <el-option label="🤖 机器人 - 未来AI" value="未来AI机器人" />
+            </el-select>
+            <el-input
+              v-model="roleplayMessage"
+              type="textarea"
+              :rows="3"
+              placeholder="请输入你想对角色说的话..."
+              class="input-area"
+              style="margin-top: 10px"
+            />
+            <el-button
+              type="primary"
+              :loading="loading"
+              @click="handleRoleplay"
+              class="action-btn"
+            >
+              <el-icon><ChatDotRound /></el-icon>
+              开始对话
+            </el-button>
+            <div v-if="roleplayResponse" class="response-area">
+              <el-divider>
+                <span class="divider-content">
+                  ✨ {{ roleplayCharacter }} 回答
+                  <el-button 
+                    type="success" 
+                    size="small" 
+                    @click="copyRoleplayResult"
+                    class="copy-btn"
+                  >
+                    <el-icon><DocumentCopy /></el-icon>
+                    复制回复
+                  </el-button>
+                </span>
+              </el-divider>
+              <div class="response-content roleplay-result">
+                {{ roleplayResponse }}
+              </div>
+            </div>
+          </el-card>
+        </div>
+
+        <!-- 故事生成器 -->
+        <div v-if="activeTab === 'story'" class="tab-content">
+          <el-card shadow="hover">
+            <template #header>
+              <div class="card-header">
+                <span>📖 AI 故事生成器</span>
+              </div>
+            </template>
+            <el-input
+              v-model="storyTheme"
+              placeholder="主题（如：奇幻冒险、星际旅行、古代传说）"
+              class="input-area"
+            />
+            <el-input
+              v-model="storyStyle"
+              placeholder="风格（如：温暖治愈、悬疑惊悚、科幻未来）"
+              class="input-area"
+              style="margin-top: 10px"
+            />
+            <el-input
+              v-model="storyElements"
+              type="textarea"
+              :rows="2"
+              placeholder="元素（可选，如：会说话的猫、时间机器、魔法森林）"
+              class="input-area"
+              style="margin-top: 10px"
+            />
+            <el-button
+              type="primary"
+              :loading="loading"
+              @click="handleStory"
+              class="action-btn"
+            >
+              <el-icon><MagicStick /></el-icon>
+              生成故事
+            </el-button>
+            <div v-if="storyResponse" class="response-area">
+              <el-divider>
+                <span class="divider-content">
+                  ✨ 生成的故事
+                  <el-button 
+                    type="success" 
+                    size="small" 
+                    @click="copyStoryResult"
+                    class="copy-btn"
+                  >
+                    <el-icon><DocumentCopy /></el-icon>
+                    复制故事
+                  </el-button>
+                </span>
+              </el-divider>
+              <div class="response-content story-result">
+                {{ storyResponse }}
+              </div>
+            </div>
+          </el-card>
+        </div>
+
+        <!-- 情绪分析 -->
+        <div v-if="activeTab === 'emotion'" class="tab-content">
+          <el-card shadow="hover">
+            <template #header>
+              <div class="card-header">
+                <span>💖 AI 情绪分析</span>
+              </div>
+            </template>
+            <el-input
+              v-model="emotionText"
+              type="textarea"
+              :rows="5"
+              placeholder="请输入一段文字，AI 将分析其中的情绪色彩..."
+              class="input-area"
+            />
+            <el-button
+              type="primary"
+              :loading="loading"
+              @click="handleEmotion"
+              class="action-btn"
+            >
+              <el-icon><DataAnalysis /></el-icon>
+              分析情绪
+            </el-button>
+            
+            <div v-if="emotionAnalysis" class="response-area">
+              <el-divider>📊 情绪分析结果</el-divider>
+              <el-descriptions :column="1" border>
+                <el-descriptions-item label="总体情绪">
+                  <el-tag v-if="emotionAnalysis.overallMood === '积极'" type="success" size="large">{{ emotionAnalysis.overallMood }}</el-tag>
+                  <el-tag v-else-if="emotionAnalysis.overallMood === '消极'" type="danger" size="large">{{ emotionAnalysis.overallMood }}</el-tag>
+                  <el-tag v-else type="info" size="large">{{ emotionAnalysis.overallMood }}</el-tag>
+                </el-descriptions-item>
+              </el-descriptions>
+              
+              <div v-if="emotionAnalysis.emotions && emotionAnalysis.emotions.length > 0" style="margin-top: 20px">
+                <h4 style="color: #00ffff; margin-bottom: 15px;">🎯 情绪强度分布</h4>
+                <div v-for="(emotion, index) in emotionAnalysis.emotions" :key="index" style="margin-bottom: 15px;">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                    <span style="color: #e0e0ff;">{{ emotion.name }}</span>
+                    <span style="color: #00ffff;">{{ emotion.intensity }}%</span>
+                  </div>
+                  <el-progress 
+                    :percentage="emotion.intensity" 
+                    :color="emotionColors[index % emotionColors.length]"
+                    :stroke-width="15"
+                    :text-inside="true"
+                  />
+                </div>
+              </div>
+              
+              <div v-if="emotionAnalysis.analysis" style="margin-top: 20px">
+                <el-divider>📝 详细分析</el-divider>
+                <div class="response-content">{{ emotionAnalysis.analysis }}</div>
+              </div>
+            </div>
+
+            <div v-if="emotionRawResponse" class="response-area">
+              <el-divider>分析结果</el-divider>
+              <div class="response-content">{{ emotionRawResponse }}</div>
+            </div>
+          </el-card>
+        </div>
+
+        <!-- 脑洞生成器 -->
+        <div v-if="activeTab === 'brainstorm'" class="tab-content">
+          <el-card shadow="hover">
+            <template #header>
+              <div class="card-header">
+                <span>💡 AI 脑洞生成器</span>
+              </div>
+            </template>
+            <el-input
+              v-model="brainstormTopic"
+              placeholder="输入一个主题，让 AI 帮你打开脑洞（如：如果人类能永生、平行宇宙、AI 觉醒）"
+              class="input-area"
+            />
+            <el-button
+              type="primary"
+              :loading="loading"
+              @click="handleBrainstorm"
+              class="action-btn"
+            >
+              <el-icon><Lightning /></el-icon>
+              打开脑洞
+            </el-button>
+            
+            <div v-if="brainstormIdeas.length > 0" class="response-area">
+              <el-divider>💫 脑洞大开</el-divider>
+              <div v-for="(idea, index) in brainstormIdeas" :key="index" class="brainstorm-card">
+                <el-card class="brainstorm-item">
+                  <div class="brainstorm-header">
+                    <el-tag type="warning" size="small" class="brainstorm-category">
+                      <el-icon><Collection /></el-icon>
+                      {{ idea.category }}
+                    </el-tag>
+                    <span class="brainstorm-number">#{{ index + 1 }}</span>
+                  </div>
+                  <h3 class="brainstorm-title">{{ idea.title }}</h3>
+                  <p class="brainstorm-desc">{{ idea.description }}</p>
+                </el-card>
+              </div>
+            </div>
+
+            <div v-if="brainstormRawResponse" class="response-area">
+              <el-divider>脑洞结果</el-divider>
+              <div class="response-content">{{ brainstormRawResponse }}</div>
+            </div>
+          </el-card>
+        </div>
       </el-main>
     </el-container>
   </el-container>
@@ -503,7 +750,11 @@ import {
   embeddingSearch,
   addToEmbeddingStore,
   ragQuery as fetchRagQuery,
-  recommendMusicByBook
+  recommendMusicByBook,
+  roleplay as fetchRoleplay,
+  generateStory as fetchStory,
+  analyzeEmotion as fetchEmotion,
+  brainstorm as fetchBrainstorm
 } from './api'
 
 const activeTab = ref('chat')
@@ -548,6 +799,28 @@ const musicBookName = ref('')
 const musicAnalysis = ref(null)
 const musicRecommendations = ref([])
 const musicRawResponse = ref('')
+
+// 角色扮演
+const roleplayCharacter = ref('李白')
+const roleplayMessage = ref('')
+const roleplayResponse = ref('')
+
+// 故事生成
+const storyTheme = ref('奇幻冒险')
+const storyStyle = ref('温暖治愈')
+const storyElements = ref('')
+const storyResponse = ref('')
+
+// 情绪分析
+const emotionText = ref('')
+const emotionAnalysis = ref(null)
+const emotionRawResponse = ref('')
+const emotionColors = ['#00ffff', '#ff00ff', '#ffd700', '#00ff88', '#ff6b6b', '#6b5bff', '#ff9f43']
+
+// 脑洞生成
+const brainstormTopic = ref('')
+const brainstormIdeas = ref([])
+const brainstormRawResponse = ref('')
 
 // 星空样式
 const getStarStyle = (index) => {
@@ -761,6 +1034,120 @@ const handleMusicRecommend = async () => {
   }
 }
 
+// 角色扮演
+const handleRoleplay = async () => {
+  if (!roleplayCharacter.value.trim()) {
+    ElMessage.warning('请选择角色')
+    return
+  }
+  if (!roleplayMessage.value.trim()) {
+    ElMessage.warning('请输入消息')
+    return
+  }
+  loading.value = true
+  try {
+    const res = await fetchRoleplay(roleplayCharacter.value, roleplayMessage.value)
+    roleplayResponse.value = res.data.response
+    ElMessage.success('对话成功')
+  } catch (error) {
+    ElMessage.error('对话失败: ' + error.message)
+  } finally {
+    loading.value = false
+  }
+}
+
+// 故事生成
+const handleStory = async () => {
+  if (!storyTheme.value.trim()) {
+    ElMessage.warning('请输入主题')
+    return
+  }
+  loading.value = true
+  try {
+    const res = await fetchStory(storyTheme.value, storyStyle.value, storyElements.value)
+    storyResponse.value = res.data.story
+    ElMessage.success('故事生成成功')
+  } catch (error) {
+    ElMessage.error('生成失败: ' + error.message)
+  } finally {
+    loading.value = false
+  }
+}
+
+// 情绪分析
+const handleEmotion = async () => {
+  if (!emotionText.value.trim()) {
+    ElMessage.warning('请输入要分析的文本')
+    return
+  }
+  loading.value = true
+  emotionAnalysis.value = null
+  emotionRawResponse.value = ''
+
+  try {
+    const res = await fetchEmotion(emotionText.value)
+
+    if (res.data.success) {
+      if (res.data.data) {
+        try {
+          const parsedData = JSON.parse(res.data.data)
+          emotionAnalysis.value = parsedData
+          ElMessage.success('分析成功！')
+        } catch (e) {
+          emotionRawResponse.value = res.data.data || res.data.rawResponse
+          ElMessage.success('分析成功！')
+        }
+      } else if (res.data.rawResponse) {
+        emotionRawResponse.value = res.data.rawResponse
+        ElMessage.success('分析成功！')
+      }
+    } else {
+      ElMessage.error('分析失败: ' + res.data.error)
+    }
+  } catch (error) {
+    ElMessage.error('分析失败: ' + error.message)
+  } finally {
+    loading.value = false
+  }
+}
+
+// 脑洞生成
+const handleBrainstorm = async () => {
+  if (!brainstormTopic.value.trim()) {
+    ElMessage.warning('请输入主题')
+    return
+  }
+  loading.value = true
+  brainstormIdeas.value = []
+  brainstormRawResponse.value = ''
+
+  try {
+    const res = await fetchBrainstorm(brainstormTopic.value)
+
+    if (res.data.success) {
+      if (res.data.data) {
+        try {
+          const parsedData = JSON.parse(res.data.data)
+          brainstormIdeas.value = parsedData.ideas
+          ElMessage.success('脑洞大开！')
+        } catch (e) {
+          brainstormRawResponse.value = res.data.data || res.data.rawResponse
+          ElMessage.success('脑洞大开！')
+        }
+      } else if (res.data.rawResponse) {
+        brainstormRawResponse.value = res.data.rawResponse
+        ElMessage.success('脑洞大开！')
+      }
+    } else {
+      ElMessage.error('生成失败: ' + res.data.error)
+    }
+  } catch (error) {
+    ElMessage.error('生成失败: ' + error.message)
+  } finally {
+    loading.value = false
+  }
+}
+
 // 在网易云音乐搜索
 const searchOnNetease = (music) => {
   const query = encodeURIComponent(`${music.title} ${music.artist}`)
@@ -820,6 +1207,16 @@ const copyCreativeResult = () => {
 // 复制自定义回复
 const copyCustomResult = () => {
   copyToClipboard(customResponse.value, '✅ 回复内容已复制到剪贴板！')
+}
+
+// 复制角色扮演回复
+const copyRoleplayResult = () => {
+  copyToClipboard(roleplayResponse.value, '✅ 角色回复已复制到剪贴板！')
+}
+
+// 复制故事
+const copyStoryResult = () => {
+  copyToClipboard(storyResponse.value, '✅ 故事内容已复制到剪贴板！')
 }
 
 onMounted(() => {
@@ -1315,5 +1712,126 @@ onMounted(() => {
 @keyframes blink {
   0%, 50% { opacity: 1; }
   51%, 100% { opacity: 0; }
+}
+
+/* 角色扮演结果 */
+.roleplay-result {
+  border-left: 3px solid #ff00ff;
+  position: relative;
+  font-size: 16px;
+  transition: all 0.3s;
+}
+
+.roleplay-result:hover {
+  border-left-color: #00ffff;
+  box-shadow: 0 0 20px rgba(255, 0, 255, 0.2);
+}
+
+/* 故事生成结果 */
+.story-result {
+  position: relative;
+  font-size: 16px;
+  border-left: 3px solid #ffd700;
+  transition: all 0.3s;
+}
+
+.story-result:hover {
+  border-left-color: #ff6b6b;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.2);
+}
+
+/* 脑洞卡片 */
+.brainstorm-card {
+  margin-top: 20px;
+}
+
+.brainstorm-item {
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, rgba(0, 100, 150, 0.8) 0%, rgba(0, 50, 100, 0.9) 100%);
+  border: 2px solid rgba(0, 255, 255, 0.4);
+  border-radius: 15px;
+  color: white;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+.brainstorm-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.brainstorm-item:hover::before {
+  left: 100%;
+}
+
+.brainstorm-item:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 10px 40px rgba(0, 255, 255, 0.4);
+  border-color: rgba(0, 255, 255, 0.8);
+}
+
+.brainstorm-item :deep(.el-card__header) {
+  background: rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.brainstorm-item :deep(.el-card__body) {
+  padding: 25px;
+}
+
+.brainstorm-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.brainstorm-category {
+  background: rgba(255, 215, 0, 0.3) !important;
+  border: 1px solid rgba(255, 215, 0, 0.5) !important;
+  color: #ffd700 !important;
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.brainstorm-number {
+  font-size: 24px;
+  font-weight: bold;
+  opacity: 0.5;
+  font-family: 'Courier New', monospace;
+  color: #00ffff;
+}
+
+.brainstorm-title {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 15px 0 10px 0;
+  color: #ffd700;
+  text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+.brainstorm-desc {
+  font-size: 15px;
+  opacity: 0.9;
+  line-height: 1.8;
+  margin: 0;
+  padding: 15px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e0e0ff;
+}
+
+/* 情绪分析进度条 */
+.brainstorm-item :deep(.el-progress-bar__outer) {
+  background-color: rgba(255, 255, 255, 0.1);
 }
 </style>

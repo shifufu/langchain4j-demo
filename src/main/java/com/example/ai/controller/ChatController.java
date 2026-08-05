@@ -231,6 +231,102 @@ public class ChatController {
         }
     }
 
+    // ==================== 新增有趣互动接口 ====================
+
+    /**
+     * AI 角色扮演
+     */
+    @PostMapping("/roleplay")
+    public Map<String, Object> roleplay(@RequestBody Map<String, String> request) {
+        String character = request.get("character");
+        String message = request.get("message");
+
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("success", true);
+        result.put("character", character);
+        result.put("message", message);
+        result.put("response", chatService.roleplay(character, message));
+        return result;
+    }
+
+    /**
+     * AI 故事生成器
+     */
+    @PostMapping("/story")
+    public Map<String, Object> generateStory(@RequestBody Map<String, String> request) {
+        String theme = request.getOrDefault("theme", "奇幻冒险");
+        String style = request.getOrDefault("style", "温暖治愈");
+        String elements = request.getOrDefault("elements", "");
+
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("success", true);
+        result.put("theme", theme);
+        result.put("style", style);
+        result.put("elements", elements);
+        result.put("story", chatService.generateStory(theme, style, elements));
+        return result;
+    }
+
+    /**
+     * AI 情绪分析
+     */
+    @PostMapping("/emotion")
+    public Map<String, Object> analyzeEmotion(@RequestBody Map<String, String> request) {
+        String text = request.get("text");
+
+        String aiResponse = chatService.analyzeEmotion(text);
+
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("success", true);
+        result.put("text", text);
+
+        try {
+            String jsonStr = aiResponse.trim();
+            int jsonStart = jsonStr.indexOf('{');
+            int jsonEnd = jsonStr.lastIndexOf('}');
+            if (jsonStart >= 0 && jsonEnd > jsonStart) {
+                jsonStr = jsonStr.substring(jsonStart, jsonEnd + 1);
+                result.put("data", jsonStr);
+            } else {
+                result.put("rawResponse", aiResponse);
+            }
+        } catch (Exception e) {
+            result.put("rawResponse", aiResponse);
+        }
+
+        return result;
+    }
+
+    /**
+     * AI 脑洞生成器
+     */
+    @PostMapping("/brainstorm")
+    public Map<String, Object> brainstorm(@RequestBody Map<String, String> request) {
+        String topic = request.get("topic");
+
+        String aiResponse = chatService.brainstorm(topic);
+
+        Map<String, Object> result = new HashMap<String, Object>();
+        result.put("success", true);
+        result.put("topic", topic);
+
+        try {
+            String jsonStr = aiResponse.trim();
+            int jsonStart = jsonStr.indexOf('{');
+            int jsonEnd = jsonStr.lastIndexOf('}');
+            if (jsonStart >= 0 && jsonEnd > jsonStart) {
+                jsonStr = jsonStr.substring(jsonStart, jsonEnd + 1);
+                result.put("data", jsonStr);
+            } else {
+                result.put("rawResponse", aiResponse);
+            }
+        } catch (Exception e) {
+            result.put("rawResponse", aiResponse);
+        }
+
+        return result;
+    }
+
     // ==================== 音乐推荐相关接口 ====================
 
     /**

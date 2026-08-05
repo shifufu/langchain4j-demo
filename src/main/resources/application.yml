@@ -8,10 +8,10 @@ server:
 # OpenAI / Volcengine Configuration
 langchain4j:
   openai:
-    api-key: ${OPENAI_API_KEY:xxxx}
-    base-url: ${OPENAI_BASE_URL:https://ark.cn-beijing.volces.com/api/coding/v3}
+    api-key: ${OPENAI_API_KEY:sk-6a6c5867ac98952b2dab90d2}
+    base-url: ${OPENAI_BASE_URL:https://api.infinisynapse.cn/api}
     # 设置为 true 使用自定义火山引擎实现，false 使用标准 OpenAI 实现
-    use-custom-volcengine: true
+    use-custom-volcengine: false
     chat:
       model: ark-code-latest
       temperature: 0.7

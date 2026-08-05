@@ -55,4 +55,18 @@ export const ragQuery = (query) => api.post('/chat/embedding/rag', { query })
 // 音乐推荐
 export const recommendMusicByBook = (bookName) => api.post('/chat/music/recommend', { bookName })
 
+// ==================== 新增有趣互动 ====================
+
+// 角色扮演
+export const roleplay = (character, message) => api.post('/chat/roleplay', { character, message })
+
+// 故事生成
+export const generateStory = (theme, style, elements) => api.post('/chat/story', { theme, style, elements })
+
+// 情绪分析
+export const analyzeEmotion = (text) => api.post('/chat/emotion', { text })
+
+// 脑洞生成
+export const brainstorm = (topic) => api.post('/chat/brainstorm', { topic })
+
 export default api
